@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import '../models/Transaction.dart';
+import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   
+  final List<Transaction> transactions;
+
+
+  TransactionList(this.transactions);
 
 
   @override
   Widget build(BuildContext context) {
+
 
     initializeDateFormatting();
     
