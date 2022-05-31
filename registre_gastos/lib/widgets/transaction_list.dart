@@ -1,117 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../model/transaction.dart';
+import '../models/transaction.dart';
 
-class TransactionList extends StatefulWidget {
+class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
-  final Function deleteTransactionFn;
+  final Function deleteTx;
 
-  TransactionList(this.transactions, this.deleteTransactionFn);
-
-  @override
-  _TransactionListState createState() =>
-      _TransactionListState(transactions, deleteTransactionFn);
-}
-
-class _TransactionListState extends State<TransactionList> {
-  final List<Transaction> transactions;
-  final Function deleteTransactionFn;
-
-  _TransactionListState(this.transactions, this.deleteTransactionFn);
+  TransactionList(this.transactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
         ? LayoutBuilder(builder: (ctx, constraints) {
             return Column(
-              children: [
-                Text("No transactions added yet!"),
+              children: <Widget>[
+                Text(
+                  'No transactions added yet!',
+                  style: Theme.of(context).textTheme.title,
+                ),
                 SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
                 Container(
-                  height: constraints.maxHeight * 0.45,
-                  child: Image.asset(
-                    'assets/images/waiting.png',
-                    height: 250,
-                  ),
-                ),
+                    height: constraints.maxHeight * 0.6,
+                    child: Image.asset(
+                      'assets/images/waiting.png',
+                      fit: BoxFit.cover,
+                    )),
               ],
             );
           })
-        : Container(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) {
-                return Card(
-                  elevation: 4,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: FittedBox(
-                            child: Text('${transactions[index].amount} €')),
+        : ListView.builder(
+            itemBuilder: (ctx, index) {
+              return Card(
+                elevation: 5,
+                margin: EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 5,
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: EdgeInsets.all(6),
+                      child: FittedBox(
+                        child: Text('\$${transactions[index].amount}'),
                       ),
                     ),
-                    title: Text(
-                      transactions[index].title,
-                      style: Theme.of(context).textTheme.title,
-                    ),
-                    subtitle: Text(
-                        DateFormat.yMMMMd().format(transactions[index].date)),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      // Faig servir una fucnió anónima per passar el parametre de la func. delete
-                      onPressed: () =>
-                          deleteTransactionFn(transactions[index].id),
-                    ),
                   ),
-                );
-              },
-              itemCount: transactions.length,
-            ),
+                  title: Text(
+                    transactions[index].title,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  subtitle: Text(
+                    DateFormat.yMMMd().format(transactions[index].date),
+                  ),
+                  trailing: MediaQuery.of(context).size.width > 460
+                      ? FlatButton.icon(
+                          icon: Icon(Icons.delete),
+                          label: Text('Delete'),
+                          textColor: Theme.of(context).errorColor,
+                          onPressed: () => deleteTx(transactions[index].id),
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.delete),
+                          color: Theme.of(context).errorColor,
+                          onPressed: () => deleteTx(transactions[index].id),
+                        ),
+                ),
+              );
+            },
+            itemCount: transactions.length,
           );
   }
 }
-      /* Column(
-              children: transactions.map((tr) {
-                return Card(
-                  elevation: 4,
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          '${tr.amount.toStringAsFixed(2)} €',
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w300),
-                        ),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 235, 235, 235),
-                          border:
-                              Border.all(color: Colors.transparent, width: 2),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            tr.title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14),
-                          ),
-                          Text(
-                            tr.date.toString(),
-                            style: TextStyle(fontSize: 13),
-                          )
-                        ],
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      )
-                    ],
-                  ),
-                );
-              }).toList(),*/
-    
