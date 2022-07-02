@@ -18,7 +18,7 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  DateTime _selectedDate;
+  DateTime? _selectedDate = DateTime.now();
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
@@ -95,17 +95,17 @@ class _NewTransactionState extends State<NewTransaction> {
                       child: Text(
                         _selectedDate == null
                             ? 'No Date Chosen!'
-                            : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                            : 'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}',
                       ),
                     ),
                     AdaptiveFlatButton('Choose Date', _presentDatePicker)
                   ],
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Add Transaction'),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).textTheme.button.color,
+                // color: Theme.of(context).primaryColor,
+                // textColor: Theme.of(context).textTheme.button.color,
                 onPressed: _submitData,
               ),
             ],
